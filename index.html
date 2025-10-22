@@ -9,7 +9,9 @@
     <meta name="theme-color" content="#F5F5F0">
     <title>TyloAI - AI Assistant</title>
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlR5bG9BSSIsCiAgInNob3J0X25hbWUiOiAiVHlsb0FJIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNGNUY1RjAiLAogICJ0aGVtZV9jb2xvciI6ICIjRjVGNUYwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5Micgdmlld0JveD0nMCAwIDE5MiAxOTInIGZpbGw9J25vbmUnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyclM0UlM0NyZWN0IHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyByeD0nNDAnIGZpbGw9JyNGNUY1RjAnLyUzRSUzQ3BhdGggZD0nTTk2IDQ4TDExMS4zMTQgODMuMzEzN0wxNDggOTZMMTExLjMxNCAxMDguNjg2TDk2IDE0NEw4MC42ODYzIDEwOC42ODZMNDQgOTZMODAuNjg2MyA4My4zMTM3TDk2IDQ4WicgZmlsbD0nJUNBNEUyNScvJTNFJTNDL3N2ZyUzRSIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgdmlld0JveD0nMCAwIDUxMiA1MTInIGZpbGw9J25vbmUnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyclM0UlM0NyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTAwJyBmaWxsPSclRjVGNUYwJy8lM0UlM0NwYXRoIGQ9J00yNTYgMTI4TDI5Ny41MDQgMjIyLjUwM0wzODQgMjU2TDI5Ny41MDQgMjg5LjQ5N0wyNTYgMzg0TDIxNC40OTYgMjg5LjQ5N0wxMjggMjU2TDIxNC40OTYgMjIyLjUwM0wyNTYgMTI4WicgZmlsbD0nJUNBNEUyNScvJTNFJTNDL3N2ZyUzRSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     
     <style>
         * {
@@ -20,11 +22,13 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             background: #F5F5F0;
             color: #1a1a1a;
-            overflow-x: hidden;
+            overflow: hidden;
             height: 100vh;
+            position: fixed;
+            width: 100%;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -53,18 +57,18 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 40vh;
+            gap: 10px;
+            margin-bottom: 35vh;
         }
         
-        .logo-star {
-            width: 48px;
-            height: 48px;
-            color: #CA4E25;
+        .logo-img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
         }
         
         .logo-text {
-            font-size: 48px;
+            font-size: 44px;
             font-weight: 400;
             color: #1a1a1a;
             letter-spacing: -1px;
@@ -72,8 +76,8 @@
         
         .by-text {
             position: absolute;
-            bottom: 120px;
-            font-size: 15px;
+            bottom: 100px;
+            font-size: 14px;
             color: #6B6B6B;
             letter-spacing: 1px;
         }
@@ -81,10 +85,11 @@
         /* Login Screen */
         #login {
             display: none;
-            min-height: 100vh;
-            padding: 20px;
+            height: 100vh;
+            padding: 16px;
             flex-direction: column;
             justify-content: center;
+            overflow: hidden;
         }
         
         #login.active {
@@ -93,35 +98,33 @@
         
         .login-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
         
         .login-logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 32px;
+            gap: 8px;
+            margin-bottom: 24px;
         }
         
-        .login-logo svg {
-            width: 40px;
-            height: 40px;
-            color: #CA4E25;
+        .login-logo img {
+            width: 36px;
+            height: 36px;
         }
         
         .login-logo span {
-            font-size: 40px;
+            font-size: 36px;
             font-weight: 400;
             color: #1a1a1a;
         }
         
         .login-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 400;
             color: #1a1a1a;
             line-height: 1.3;
-            margin-bottom: 8px;
         }
         
         .login-form {
@@ -132,31 +135,26 @@
         
         .social-btn {
             width: 100%;
-            height: 56px;
-            border-radius: 16px;
+            height: 50px;
+            border-radius: 14px;
             border: none;
             background: #000;
             color: #fff;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .social-btn:active {
-            transform: scale(0.98);
         }
         
         .divider {
             text-align: center;
-            margin: 32px 0;
+            margin: 24px 0;
             color: #6B6B6B;
-            font-size: 15px;
+            font-size: 14px;
             position: relative;
         }
         
@@ -170,24 +168,18 @@
             background: #E0E0E0;
         }
         
-        .divider::before {
-            left: 0;
-        }
-        
-        .divider::after {
-            right: 0;
-        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
         
         .input-field {
             width: 100%;
-            height: 56px;
-            border-radius: 16px;
+            height: 50px;
+            border-radius: 14px;
             border: 1px solid #E0E0E0;
             background: #fff;
-            padding: 0 20px;
-            font-size: 17px;
-            margin-bottom: 12px;
-            transition: all 0.2s;
+            padding: 0 16px;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
         
         .input-field:focus {
@@ -201,28 +193,23 @@
         
         .login-btn {
             width: 100%;
-            height: 56px;
-            border-radius: 16px;
+            height: 50px;
+            border-radius: 14px;
             border: none;
             background: #CA4E25;
             color: #fff;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 12px;
-        }
-        
-        .login-btn:active {
-            transform: scale(0.98);
+            margin-top: 10px;
         }
         
         .terms {
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             color: #6B6B6B;
-            margin-top: 24px;
-            line-height: 1.6;
+            margin-top: 20px;
+            line-height: 1.5;
         }
         
         .terms a {
@@ -232,8 +219,8 @@
         
         .error-msg {
             color: #CA4E25;
-            font-size: 14px;
-            margin-top: 8px;
+            font-size: 13px;
+            margin-top: 6px;
             display: none;
         }
         
@@ -243,14 +230,174 @@
             height: 100vh;
             flex-direction: column;
             background: #fff;
+            position: relative;
         }
         
         #chat.active {
             display: flex;
         }
         
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: -280px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #E0E0E0;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .close-sidebar {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .new-chat-sidebar {
+            margin: 12px;
+            padding: 12px;
+            background: #CA4E25;
+            color: #fff;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        
+        .history-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .history-item:hover {
+            background: #F5F5F5;
+        }
+        
+        .history-item.active {
+            background: #F0F0F0;
+        }
+        
+        .sidebar-footer {
+            border-top: 1px solid #E0E0E0;
+            padding: 16px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+        
+        .user-info:hover {
+            background: #F5F5F5;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #CA4E25;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-email {
+            font-size: 13px;
+            color: #1a1a1a;
+        }
+        
+        .user-plan {
+            font-size: 11px;
+            color: #6B6B6B;
+        }
+        
+        .settings-panel {
+            display: none;
+            background: #F9F9F9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+        
+        .settings-panel.active {
+            display: block;
+        }
+        
+        .settings-btn {
+            width: 100%;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
         .chat-header {
-            padding: 12px 20px;
+            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -259,12 +406,12 @@
         }
         
         .menu-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             cursor: pointer;
         }
         
@@ -276,48 +423,157 @@
         }
         
         .header-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
         }
         
-        .new-chat-btn {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .model-selector {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+            background: #fff;
+            font-size: 13px;
             cursor: pointer;
         }
         
-        .chat-content {
+        .chat-messages {
             flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .welcome-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            height: 100%;
         }
         
-        .whale-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
+        .welcome-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 20px;
         }
         
         .greeting {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #1a1a1a;
         }
         
         .subgreeting {
-            font-size: 17px;
+            font-size: 16px;
             color: #6B6B6B;
         }
         
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .message.user .message-avatar {
+            background: #E0E0E0;
+            color: #1a1a1a;
+        }
+        
+        .message.assistant .message-avatar {
+            background: #3B82F6;
+            color: #fff;
+        }
+        
+        .message-content {
+            flex: 1;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .message-content pre {
+            background: #1a1a1a;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .message-content code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .message-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        
+        .message-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .message-content th,
+        .message-content td {
+            border: 1px solid #E0E0E0;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .message-content th {
+            background: #F5F5F5;
+            font-weight: 600;
+        }
+        
+        .thinking-block {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .thinking-header {
+            padding: 10px 12px;
+            background: #F3F4F6;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .thinking-content {
+            padding: 12px;
+            font-size: 14px;
+            color: #6B6B6B;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .thinking-content.expanded {
+            display: block;
+        }
+        
         .chat-input-container {
-            padding: 12px 20px 24px;
+            padding: 10px 16px 16px;
             background: #fff;
             border-top: 1px solid #E0E0E0;
         }
@@ -326,16 +582,16 @@
             display: flex;
             align-items: center;
             background: #F5F5F5;
-            border-radius: 24px;
-            padding: 12px 16px;
-            gap: 12px;
+            border-radius: 20px;
+            padding: 10px 14px;
+            gap: 10px;
         }
         
         .chat-input {
             flex: 1;
             border: none;
             background: transparent;
-            font-size: 17px;
+            font-size: 15px;
             outline: none;
         }
         
@@ -343,45 +599,9 @@
             color: #B0B0B0;
         }
         
-        .input-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-        }
-        
-        .chat-footer {
-            padding: 16px 20px;
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            background: #fff;
-        }
-        
-        .footer-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            color: #1a1a1a;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        
         .send-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: #3B82F6;
             border: none;
@@ -389,10 +609,23 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .send-btn:disabled {
+            background: #E0E0E0;
+            cursor: not-allowed;
         }
         
         .send-btn svg {
             color: #fff;
+        }
+        
+        .usage-warning {
+            font-size: 12px;
+            color: #CA4E25;
+            text-align: center;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -400,9 +633,7 @@
     <!-- Splash Screen -->
     <div id="splash">
         <div class="logo-container">
-            <svg class="logo-star" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L14.4697 9.46967L22 12L14.4697 14.5303L12 22L9.53033 14.5303L2 12L9.53033 9.46967L12 2Z" fill="currentColor"/>
-            </svg>
+            <img src="https://tyloai.com/logo.png" alt="TyloAI" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">TyloAI</div>
         </div>
         <div class="by-text">BY PROTOETIC</div>
@@ -412,9 +643,7 @@
     <div id="login">
         <div class="login-header">
             <div class="login-logo">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L14.4697 9.46967L22 12L14.4697 14.5303L12 22L9.53033 14.5303L2 12L9.53033 9.46967L12 2Z" fill="currentColor"/>
-                </svg>
+                <img src="https://tyloai.com/logo.png" alt="TyloAI" onerror="this.style.display='none'">
                 <span>TyloAI</span>
             </div>
             <div class="login-title">Do your best work<br>with TyloAI</div>
@@ -422,7 +651,7 @@
         
         <div class="login-form">
             <button class="social-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -432,7 +661,7 @@
             </button>
             
             <button class="social-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                 </svg>
                 Continue with Apple
@@ -455,80 +684,112 @@
 
     <!-- Chat Screen -->
     <div id="chat">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Chats</div>
+                <div class="close-sidebar" onclick="toggleSidebar()">✕</div>
+            </div>
+            
+            <div class="new-chat-sidebar" onclick="createNewChat()">+ New Chat</div>
+            
+            <div class="chat-history" id="chatHistory"></div>
+            
+            <div class="sidebar-footer">
+                <div class="user-info" onclick="toggleSettings()">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <div class="user-details">
+                        <div class="user-email" id="userEmail"></div>
+                        <div class="user-plan">Free Plan</div>
+                    </div>
+                </div>
+                <div class="settings-panel" id="settingsPanel">
+                    <button class="settings-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Chat -->
         <div class="chat-header">
-            <div class="menu-btn">
+            <div class="menu-btn" onclick="toggleSidebar()">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <div class="header-title">New chat</div>
-            <div class="new-chat-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="16"/>
-                    <line x1="8" y1="12" x2="16" y2="12"/>
-                </svg>
-            </div>
+            <select class="model-selector" id="modelSelector">
+                <option value="ode-6-flash">Fast</option>
+                <option value="ode-6">Advanced</option>
+                <option value="ode-6-deep">Deep Think</option>
+                <option value="ode-6-search">Search</option>
+                <option value="ode-6-deep-search">Deep Search</option>
+            </select>
         </div>
         
-        <div class="chat-content">
-            <svg class="whale-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M70 50C70 61.0457 61.0457 70 50 70C38.9543 70 30 61.0457 30 50C30 38.9543 38.9543 30 50 30C61.0457 30 70 38.9543 70 50Z" fill="#3B82F6"/>
-                <path d="M50 30C50 20 60 15 65 20C70 25 65 35 60 40" stroke="#3B82F6" stroke-width="4" stroke-linecap="round"/>
-                <circle cx="45" cy="48" r="3" fill="white"/>
-            </svg>
-            <div class="greeting" id="greeting">Good evening.</div>
-            <div class="subgreeting">How can I help you today?</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-screen" id="welcomeScreen">
+                <svg class="welcome-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M70 50C70 61.0457 61.0457 70 50 70C38.9543 70 30 61.0457 30 50C30 38.9543 38.9543 30 50 30C61.0457 30 70 38.9543 70 50Z" fill="#3B82F6"/>
+                    <path d="M50 30C50 20 60 15 65 20C70 25 65 35 60 40" stroke="#3B82F6" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="45" cy="48" r="3" fill="white"/>
+                </svg>
+                <div class="greeting" id="greeting"></div>
+                <div class="subgreeting">How can I help you today?</div>
+            </div>
         </div>
         
         <div class="chat-input-container">
             <div class="chat-input-wrapper">
-                <input type="text" class="chat-input" placeholder="Message TyloAI" />
-                <div class="input-actions">
-                    <button class="action-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                        </svg>
-                    </button>
-                    <button class="send-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                </div>
+                <input type="text" class="chat-input" id="chatInput" placeholder="Message TyloAI" />
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
             </div>
-        </div>
-        
-        <div class="chat-footer">
-            <button class="footer-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                </svg>
-                DeepThink
-            </button>
-            <button class="footer-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="M21 21l-4.35-4.35"/>
-                </svg>
-                Search
-            </button>
+            <div class="usage-warning" id="usageWarning" style="display:none;"></div>
         </div>
     </div>
 
     <script>
-        // Show splash screen for 3 seconds
+        const API_CONFIG = {
+            baseUrl: 'https://jeniya.cn/v1',
+            apiKey: 'sk-AX9opShPb1cBByrwVQwZlEP0k6xfKi7VCw375yH5RUhfG6Yc',
+            models: {
+                'ode-6-flash': 'gemini-2.5-flash-lite-preview-09-2025-nothinking',
+                'ode-6': 'gemini-1.5-flash-002',
+                'ode-6-deep': 'doubao-seed-1-6-flash-250615',
+                'ode-6-search': 'gemini-2.5-flash-all',
+                'ode-6-deep-search': 'deepseek-r1-searching'
+            }
+        };
+
+        let currentChatId = null;
+        let isProcessing = false;
+
+        // Initialize
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('splash').classList.add('hidden');
                 setTimeout(() => {
                     document.getElementById('splash').style.display = 'none';
-                    document.getElementById('login').classList.add('active');
+                    checkLoginStatus();
                 }, 500);
             }, 3000);
         });
 
-        // Login handler
+        function checkLoginStatus() {
+            const user = JSON.parse(localStorage.getItem('tyloai_user') || 'null');
+            if (user) {
+                showChatScreen();
+            } else {
+                document.getElementById('login').classList.add('active');
+            }
+        }
+
         function handleLogin() {
             const inviteCode = document.getElementById('inviteCode').value;
             const email = document.getElementById('email').value;
@@ -536,64 +797,325 @@
             const errorMsg = document.getElementById('errorMsg');
             
             if (inviteCode === '1d93n4n6n32n2g3u4o2j3g4i0d' && email && password) {
+                const user = { email, loggedInAt: Date.now() };
+                localStorage.setItem('tyloai_user', JSON.stringify(user));
                 errorMsg.style.display = 'none';
                 document.getElementById('login').classList.remove('active');
-                document.getElementById('chat').classList.add('active');
-                updateGreeting();
+                showChatScreen();
             } else {
                 errorMsg.style.display = 'block';
             }
         }
 
-        // Update greeting based on Beijing time
+        function showChatScreen() {
+            document.getElementById('chat').classList.add('active');
+            const user = JSON.parse(localStorage.getItem('tyloai_user'));
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = user.email[0].toUpperCase();
+            updateGreeting();
+            loadChatHistory();
+            createNewChat();
+        }
+
         function updateGreeting() {
             const now = new Date();
             const beijingTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
             const hour = beijingTime.getHours();
             
             let greeting;
-            if (hour >= 5 && hour < 12) {
-                greeting = 'Good morning.';
-            } else if (hour >= 12 && hour < 18) {
-                greeting = 'Good afternoon.';
-            } else {
-                greeting = 'Good evening.';
-            }
+            if (hour >= 5 && hour < 12) greeting = 'Good morning.';
+            else if (hour >= 12 && hour < 18) greeting = 'Good afternoon.';
+            else greeting = 'Good evening.';
             
             document.getElementById('greeting').textContent = greeting;
         }
 
-        // Allow Enter key to submit login
-        document.addEventListener('DOMContentLoaded', () => {
-            const inputs = document.querySelectorAll('.input-field');
-            inputs.forEach(input => {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        handleLogin();
-                    }
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('active');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('tyloai_user');
+                location.reload();
+            }
+        }
+
+        function createNewChat() {
+            currentChatId = 'chat_' + Date.now();
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="welcome-screen">
+                    <svg class="welcome-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M70 50C70 61.0457 61.0457 70 50 70C38.9543 70 30 61.0457 30 50C30 38.9543 38.9543 30 50 30C61.0457 30 70 38.9543 70 50Z" fill="#3B82F6"/>
+                        <path d="M50 30C50 20 60 15 65 20C70 25 65 35 60 40" stroke="#3B82F6" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="45" cy="48" r="3" fill="white"/>
+                    </svg>
+                    <div class="greeting" id="greeting"></div>
+                    <div class="subgreeting">How can I help you today?</div>
+                </div>
+            `;
+            updateGreeting();
+            saveCurrentChat();
+            loadChatHistory();
+            if (document.getElementById('sidebar').classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+
+        function loadChatHistory() {
+            const chats = JSON.parse(localStorage.getItem('tyloai_chats') || '[]');
+            const historyEl = document.getElementById('chatHistory');
+            historyEl.innerHTML = chats.map(chat => `
+                <div class="history-item ${chat.id === currentChatId ? 'active' : ''}" onclick="loadChat('${chat.id}')">
+                    ${chat.title || 'New chat'}
+                </div>
+            `).join('');
+        }
+
+        function loadChat(chatId) {
+            const chats = JSON.parse(localStorage.getItem('tyloai_chats') || '[]');
+            const chat = chats.find(c => c.id === chatId);
+            if (!chat) return;
+            
+            currentChatId = chatId;
+            const messagesEl = document.getElementById('chatMessages');
+            messagesEl.innerHTML = '';
+            
+            chat.messages.forEach(msg => {
+                addMessageToUI(msg.role, msg.content, msg.thinking);
+            });
+            
+            loadChatHistory();
+            toggleSidebar();
+        }
+
+        function saveCurrentChat() {
+            const chats = JSON.parse(localStorage.getItem('tyloai_chats') || '[]');
+            const messagesEl = document.getElementById('chatMessages');
+            const messages = Array.from(messagesEl.querySelectorAll('.message')).map(el => ({
+                role: el.classList.contains('user') ? 'user' : 'assistant',
+                content: el.querySelector('.message-content').textContent,
+                thinking: el.querySelector('.thinking-content')?.textContent || null
+            }));
+            
+            const existingIndex = chats.findIndex(c => c.id === currentChatId);
+            const title = messages[0]?.content.substring(0, 50) || 'New chat';
+            
+            if (existingIndex >= 0) {
+                chats[existingIndex] = { id: currentChatId, title, messages, updatedAt: Date.now() };
+            } else {
+                chats.unshift({ id: currentChatId, title, messages, createdAt: Date.now() });
+            }
+            
+            localStorage.setItem('tyloai_chats', JSON.stringify(chats.slice(0, 50)));
+        }
+
+        async function sendMessage() {
+            if (isProcessing) return;
+            
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const selectedModel = document.getElementById('modelSelector').value;
+            
+            // Check ode-6 usage limit
+            if (selectedModel === 'ode-6') {
+                const today = new Date().toDateString();
+                const usage = JSON.parse(localStorage.getItem('tyloai_ode6_usage') || '{}');
+                if (usage.date !== today) {
+                    usage.date = today;
+                    usage.count = 0;
+                }
+                if (usage.count >= 10) {
+                    document.getElementById('usageWarning').textContent = 'Daily limit reached for Advanced model (10/10)';
+                    document.getElementById('usageWarning').style.display = 'block';
+                    return;
+                }
+                usage.count++;
+                localStorage.setItem('tyloai_ode6_usage', JSON.stringify(usage));
+                document.getElementById('usageWarning').textContent = `Advanced model usage: ${usage.count}/10 today`;
+                document.getElementById('usageWarning').style.display = 'block';
+            } else {
+                document.getElementById('usageWarning').style.display = 'none';
+            }
+            
+            input.value = '';
+            isProcessing = true;
+            document.getElementById('sendBtn').disabled = true;
+            
+            // Remove welcome screen
+            const welcome = document.querySelector('.welcome-screen');
+            if (welcome) welcome.remove();
+            
+            // Add user message
+            addMessageToUI('user', message);
+            
+            // Add assistant message placeholder
+            const assistantMsgEl = addMessageToUI('assistant', '');
+            const contentEl = assistantMsgEl.querySelector('.message-content');
+            
+            try {
+                const systemPrompt = getSystemPrompt(selectedModel);
+                const response = await fetch(`${API_CONFIG.baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.models[selectedModel],
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: message }
+                        ],
+                        stream: true,
+                        temperature: 0.7
+                    })
                 });
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullText = '';
+                let thinkingText = '';
+                let isThinking = false;
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n').filter(line => line.trim().startsWith('data:'));
+                    
+                    for (const line of lines) {
+                        const data = line.replace('data: ', '').trim();
+                        if (data === '[DONE]') break;
+                        
+                        try {
+                            const parsed = JSON.parse(data);
+                            const content = parsed.choices[0]?.delta?.content || '';
+                            
+                            // Handle thinking blocks for deep models
+                            if (selectedModel.includes('deep') && content) {
+                                if (content.includes('<think>')) {
+                                    isThinking = true;
+                                    thinkingText = '';
+                                } else if (content.includes('</think>')) {
+                                    isThinking = false;
+                                    if (thinkingText) {
+                                        addThinkingBlock(assistantMsgEl, thinkingText);
+                                        thinkingText = '';
+                                    }
+                                } else if (isThinking) {
+                                    thinkingText += content;
+                                } else {
+                                    fullText += content;
+                                    contentEl.innerHTML = marked.parse(fullText);
+                                    hljs.highlightAll();
+                                }
+                            } else {
+                                fullText += content;
+                                contentEl.innerHTML = marked.parse(fullText);
+                                hljs.highlightAll();
+                            }
+                            
+                            scrollToBottom();
+                        } catch (e) {}
+                    }
+                }
+                
+            } catch (error) {
+                contentEl.textContent = 'Error: Unable to process your request. Please try again.';
+                console.error('API Error:', error);
+            }
+            
+            isProcessing = false;
+            document.getElementById('sendBtn').disabled = false;
+            saveCurrentChat();
+        }
+
+        function getSystemPrompt(model) {
+            const base = "You are TyloAI, an advanced AI assistant created by Protoetic. You are helpful, creative, and provide detailed responses. Format your responses using markdown with proper headings, lists, code blocks, and tables when appropriate.";
+            
+            if (model === 'ode-6-search' || model === 'ode-6-deep-search') {
+                return base + " IMPORTANT: You MUST search the internet for current information to answer the user's question. Always use web search capabilities.";
+            }
+            
+            return base;
+        }
+
+        function addMessageToUI(role, content, thinking = null) {
+            const messagesEl = document.getElementById('chatMessages');
+            const msgEl = document.createElement('div');
+            msgEl.className = `message ${role}`;
+            
+            const avatar = role === 'user' 
+                ? document.getElementById('userEmail').textContent[0].toUpperCase()
+                : 'AI';
+            
+            msgEl.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">${marked.parse(content)}</div>
+            `;
+            
+            messagesEl.appendChild(msgEl);
+            
+            if (thinking) {
+                addThinkingBlock(msgEl, thinking);
+            }
+            
+            hljs.highlightAll();
+            scrollToBottom();
+            return msgEl;
+        }
+
+        function addThinkingBlock(messageEl, thinkingContent) {
+            const existingThinking = messageEl.querySelector('.thinking-block');
+            if (existingThinking) return;
+            
+            const thinkingEl = document.createElement('div');
+            thinkingEl.className = 'thinking-block';
+            thinkingEl.innerHTML = `
+                <div class="thinking-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
+                    <span>💭 Thinking process</span>
+                    <span>▼</span>
+                </div>
+                <div class="thinking-content">${thinkingContent}</div>
+            `;
+            
+            messageEl.querySelector('.message-content').prepend(thinkingEl);
+        }
+
+        function scrollToBottom() {
+            const messages = document.getElementById('chatMessages');
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Enter to send
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Enter to login
+        document.querySelectorAll('.input-field').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
             });
         });
 
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => {
-                        self.skipWaiting();
-                    });
-                    self.addEventListener('activate', (e) => {
-                        self.clients.claim();
-                    });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(fetch(e.request));
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl);
-            });
-        }
+        // Configure marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
     </script>
 </body>
 </html>
