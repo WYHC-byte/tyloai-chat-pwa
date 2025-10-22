@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -29,8 +29,8 @@
             height: 100vh;
             position: fixed;
             width: 100%;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
+            top: 0;
+            left: 0;
         }
         
         /* Splash Screen */
@@ -82,6 +82,68 @@
             letter-spacing: 1px;
         }
         
+        /* First Time Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 340px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            display: block;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+        
+        .modal-text {
+            font-size: 15px;
+            text-align: center;
+            color: #6B6B6B;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        
+        .modal-btn {
+            width: 100%;
+            height: 48px;
+            border-radius: 12px;
+            border: none;
+            background: #3B82F6;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
         /* Login Screen */
         #login {
             display: none;
@@ -89,7 +151,8 @@
             padding: 16px;
             flex-direction: column;
             justify-content: center;
-            overflow: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         #login.active {
@@ -224,13 +287,64 @@
             display: none;
         }
         
+        /* Custom Checkbox */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .custom-checkbox input {
+            display: none;
+        }
+        
+        .checkbox-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D0D0D0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        
+        .custom-checkbox input:checked + .checkbox-box {
+            background: #3B82F6;
+            border-color: #3B82F6;
+        }
+        
+        .checkbox-box svg {
+            width: 12px;
+            height: 12px;
+            stroke: #fff;
+            stroke-width: 3;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .custom-checkbox input:checked + .checkbox-box svg {
+            opacity: 1;
+        }
+        
+        .checkbox-label {
+            margin-left: 8px;
+            font-size: 14px;
+        }
+        
         /* Chat Screen */
         #chat {
             display: none;
             height: 100vh;
             flex-direction: column;
             background: #fff;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
         
         #chat.active {
@@ -293,6 +407,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 8px;
+            -webkit-overflow-scrolling: touch;
         }
         
         .history-item {
@@ -403,6 +518,7 @@
             align-items: center;
             border-bottom: 1px solid #E0E0E0;
             background: #fff;
+            flex-shrink: 0;
         }
         
         .menu-btn {
@@ -439,7 +555,9 @@
         .chat-messages {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 16px;
+            -webkit-overflow-scrolling: touch;
         }
         
         .welcome-screen {
@@ -448,6 +566,7 @@
             justify-content: center;
             align-items: center;
             height: 100%;
+            min-height: 300px;
         }
         
         .welcome-icon {
@@ -500,6 +619,8 @@
             flex: 1;
             font-size: 15px;
             line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .message-content pre {
@@ -559,6 +680,12 @@
             font-size: 14px;
         }
         
+        .thinking-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+        }
+        
         .thinking-content {
             padding: 12px;
             font-size: 14px;
@@ -573,9 +700,11 @@
         }
         
         .chat-input-container {
-            padding: 10px 16px 16px;
+            padding: 12px 16px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
             background: #fff;
             border-top: 1px solid #E0E0E0;
+            flex-shrink: 0;
         }
         
         .chat-input-wrapper {
@@ -593,6 +722,7 @@
             background: transparent;
             font-size: 15px;
             outline: none;
+            min-height: 20px;
         }
         
         .chat-input::placeholder {
@@ -630,6 +760,22 @@
     </style>
 </head>
 <body>
+    <!-- First Time Modal -->
+    <div class="modal-overlay" id="firstTimeModal">
+        <div class="modal-content">
+            <svg class="modal-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#3B82F6" opacity="0.1"/>
+                <path d="M50 30V55M50 65V70" stroke="#3B82F6" stroke-width="6" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="40" stroke="#3B82F6" stroke-width="4"/>
+            </svg>
+            <div class="modal-title">欢迎使用 TyloAI</div>
+            <div class="modal-text">
+                请注意：此应用版本与网页版本数据不互通，聊天记录仅保存在本地设备中。
+            </div>
+            <button class="modal-btn" onclick="closeFirstTimeModal()">我知道了</button>
+        </div>
+    </div>
+
     <!-- Splash Screen -->
     <div id="splash">
         <div class="logo-container">
@@ -691,7 +837,11 @@
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-title">Chats</div>
-                <div class="close-sidebar" onclick="toggleSidebar()">✕</div>
+                <div class="close-sidebar" onclick="toggleSidebar()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </div>
             </div>
             
             <div class="new-chat-sidebar" onclick="createNewChat()">+ New Chat</div>
@@ -781,10 +931,23 @@
             }, 3000);
         });
 
+        function closeFirstTimeModal() {
+            document.getElementById('firstTimeModal').classList.remove('active');
+            localStorage.setItem('tyloai_app_first_time', 'false');
+        }
+
+        function showFirstTimeModal() {
+            const hasSeenModal = localStorage.getItem('tyloai_app_first_time');
+            if (!hasSeenModal) {
+                document.getElementById('firstTimeModal').classList.add('active');
+            }
+        }
+
         function checkLoginStatus() {
             const user = JSON.parse(localStorage.getItem('tyloai_user') || 'null');
             if (user) {
                 showChatScreen();
+                showFirstTimeModal();
             } else {
                 document.getElementById('login').classList.add('active');
             }
@@ -802,6 +965,7 @@
                 errorMsg.style.display = 'none';
                 document.getElementById('login').classList.remove('active');
                 showChatScreen();
+                showFirstTimeModal();
             } else {
                 errorMsg.style.display = 'block';
             }
@@ -1082,8 +1246,19 @@
             thinkingEl.className = 'thinking-block';
             thinkingEl.innerHTML = `
                 <div class="thinking-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
-                    <span>💭 Thinking process</span>
-                    <span>▼</span>
+                    <span>
+                        <svg class="thinking-icon" style="display: inline-block; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"/>
+                            <circle cx="19" cy="12" r="1"/>
+                            <circle cx="5" cy="12" r="1"/>
+                        </svg>
+                        思考过程
+                    </span>
+                    <span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </span>
                 </div>
                 <div class="thinking-content">${thinkingContent}</div>
             `;
